@@ -180,7 +180,7 @@ void app_main(void) {
     chat_notify_audio_play(NOTIFY_STARTUP, NULL);
     qmsd_network_start(aiha_ai_chat_start);
 
-    battery_manage_init();
+    // battery_manage_init();
 
     int volume_diff_count = 0;
     for (;;) {
