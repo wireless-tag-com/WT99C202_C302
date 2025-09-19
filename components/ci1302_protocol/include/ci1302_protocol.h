@@ -133,6 +133,7 @@ typedef enum{
     CIAS_FACTORY_TEST_ENG_THR_SET       =  0x050c,   //音频通路设置检测播报音能量阈值设置，范围(0-100db)
     CIAS_FACTORY_TEST_ENG_GET           =  0x050d,       //生产测试结果返回
     CIAS_FACTORY_TEST_REAL_VAL_GET      =  0x050e,       //生产通路测试过程中实时值上传
+    CIAS_SEND_PARTITIONS_CRC            =  0x0550,       //发送分区表crc
     //语音系统相关
     CIAS_AUDIO_SYS_READY                =  0x0601,       //语音系统ready
     CIAS_AUDIO_SYS_ERR                  =  0x0602,       //语音系统异常

@@ -66,9 +66,8 @@
 #define KEY_0_PIN           (6)
 
 // BAT
-#define BAT_CHR_PIN         (3)    // CHRG引脚，充电状态指示 (GPIO3)
-#define BAT_STDBY_PIN       (4)    // STDBY引脚，充电完成指示 (GPIO4)
-#define BAT_ADC_PIN         (0)    // 电池电压检测引脚 (GPIO0)
+#define BAT_CHR_PIN         (-1)
+#define BAT_ADC_PIN         (-1)
 
 // PW
 #define PW_KEEP_PIN         (-1)

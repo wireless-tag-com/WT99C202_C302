@@ -52,6 +52,7 @@ typedef struct _opus_dec_handle_t {
     uint32_t buffer_packet_count;     /**< 缓冲区需要的包数量 */
     uint32_t current_packet_count;    /**< 当前已接收的包数量 */
     bool buffering_enabled;           /**< 是否启用缓冲区 */
+    int software_gain_percent;        /**< 软件增益百分比，默认100% */
 } opus_dec_handle_t;
 
 /**
@@ -137,6 +138,24 @@ bool opus_dec_wait_done(opus_dec_handle_t* handle, uint32_t timeout_ms);
  * @param user_data 传递给回调函数的用户数据
  */
 void opus_dec_set_write_cb(opus_dec_handle_t* handle, opus_dec_write_cb write_cb, void* user_data);
+
+/**
+ * @brief 设置OPUS解码器软件增益
+ * 
+ * 通过软件算法对OPUS解码后的音频数据进行音量放大，可以突破硬件音量限制
+ * 
+ * @param handle 解码器句柄
+ * @param gain_percent 增益百分比，100表示原音量，200表示放大2倍，50表示减半
+ */
+void opus_dec_set_software_gain(opus_dec_handle_t* handle, int gain_percent);
+
+/**
+ * @brief 获取OPUS解码器当前软件增益设置
+ * 
+ * @param handle 解码器句柄
+ * @return int 当前软件增益百分比，如果handle为NULL则返回100
+ */
+int opus_dec_get_software_gain(opus_dec_handle_t* handle);
 
 #ifdef __cplusplus
 }

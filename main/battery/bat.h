@@ -3,9 +3,12 @@
 #include <stdint.h>
 #include <stddef.h>
 
+
+#define LOW_POWER 35
+#define EXTREMELY_LOW_POWER 15
 // 电池事件类型定义
-#define BAT_EVENT_LOW_POWER     1    // 低电量警告 (<=20%)
-#define BAT_EVENT_CRITICAL      2    // 极低电量 (<=5%)
+#define BAT_EVENT_LOW_POWER     1    // 低电量警告 (<=LOW_POWER)
+#define BAT_EVENT_CRITICAL      2    // 极低电量 (<=EXTREMELY_LOW_POWER)
 #define BAT_EVENT_USB_PLUG      3    // USB插入
 #define BAT_EVENT_USB_UNPLUG    4    // USB拔出
 #define BAT_EVENT_CHARGE_FULL   5    // 充电完成

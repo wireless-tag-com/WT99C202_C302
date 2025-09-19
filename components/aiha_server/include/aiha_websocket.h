@@ -47,6 +47,11 @@ typedef enum {
     ALLINONE_ERROR_CODE_MAX,                     /**< 错误代码最大值 */
 } allinone_error_code_t;
 
+typedef enum {
+    AIHA_AUDIO_FORMAT_MP3 = 0,
+    AIHA_AUDIO_FORMAT_OPUS = 1,
+} aiha_audio_format_t; 
+
 /**
  * @brief 音频状态枚举
  * @details 定义了音频处理过程中的不同状态
@@ -55,7 +60,7 @@ typedef enum {
     ALLINONE_AUDIO_STATUS_START = 0,      /**< 音频开始 */
     ALLINONE_AUDIO_STATUS_PROCESSING = 1, /**< 音频处理中 */
     ALLINONE_AUDIO_STATUS_END = 2,        /**< 音频结束 */
-} allinone_audio_status_t;
+} allinone_audio_status_t; 
 
 /**
  * @brief WebSocket 事件位掩码
@@ -83,7 +88,7 @@ typedef bool (*aiha_request_asr_finish_cb_t)(const char* asr_result, const char*
  * @param size 音频数据大小
  * @param status 音频状态
  */
-typedef void (*aiha_websocket_audio_recv_cb_t)(const uint8_t* data, uint32_t size, allinone_audio_status_t status);
+typedef void (*aiha_websocket_audio_recv_cb_t)(const uint8_t* data, uint32_t size, allinone_audio_status_t status, aiha_audio_format_t format);
 
 /**
  * @brief WebSocket 文本接收回调函数类型
@@ -99,8 +104,9 @@ typedef void (*aiha_websocket_text_recv_cb_t)(char* asr_result, uint8_t asr_fini
  */
 typedef struct {
     char production_id[32];                           /**< 产品ID */
-    char audio_upload_format[16];                     /**< 音频上传格式 */
-    char audio_spk_format[16];                        /**< 音频播放格式 */
+    aiha_audio_format_t audio_upload_format;                     /**< 音频上传格式 */
+    aiha_audio_format_t audio_spk_format;                        /**< 音频播放格式 */
+    uint8_t vad_type;                                 /**< 云端vad类型 1:只有本地vad，2:本地vad + 云端vad，3:云端vad */
     aiha_websocket_audio_recv_cb_t audio_recv_cb;     /**< 音频接收回调函数 */
     aiha_websocket_text_recv_cb_t text_recv_cb;       /**< 文本接收回调函数, 未实现 */
     aiha_websocket_error_cb_t error_cb;               /**< 错误回调函数 */

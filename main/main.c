@@ -27,9 +27,11 @@
 #include "chat_notify.h"
 #include "ci1302.h"
 #include "bat_status.h"
+#include "ci1302_asr_ota.h"
 
 #define TAG "MAIN"
 
+static __NOINIT_ATTR uint32_t ci1302_asr_need_ota = 0;
 
 bool g_ecrypt_index = 0;
 
@@ -127,7 +129,7 @@ void app_main(void) {
     esp_log_level_set("AUDIO_THREAD", ESP_LOG_ERROR);
     esp_log_level_set("i2s_std", ESP_LOG_DEBUG);
 
-    esp_log_level_set("ci1302_protocol", ESP_LOG_ERROR);
+    esp_log_level_set("ci1302_protocol", ESP_LOG_INFO);
 
     esp_err_t ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
@@ -136,6 +138,22 @@ void app_main(void) {
     }
 
     printf("QMSD Start, version: " SOFT_VERSION "\n");
+    storage_nvs_init();
+    
+    // 1302 ota网络初始化
+    // qmsd_network_start_for_1302_ota(NULL);
+    // ci1302_ota_v3_update_start("http://192.169.3.74:8081/ci1302/ci1306_v1.0.11_lingxilingxi.bin"); // ota升级,v3协议
+    // ci1302_ota_v3_update_start("http://192.169.3.74:8081/ci1302/ci1306_v1.0.11_nihaoxiaoming.bin");
+    if (ci1302_asr_need_ota == 0xa55a) {
+        ci1302_asr_need_ota = 0;
+        ESP_LOGW(TAG, "ASR module found update, start ota ci1302");
+        ci1302_uart_ota_init(UART_NUM_1, EXT_UART_TXD_PIN, EXT_UART_RXD_PIN, 921600);
+        ci1302_asr_ota_init();
+        for (;;) {
+            vTaskDelay(pdMS_TO_TICKS(100));
+        }
+    }
+
     ci1302_init(UART_NUM_1, EXT_UART_TXD_PIN, EXT_UART_RXD_PIN, EXT_UART_STA_PIN, EXT_AUDIO_RST_PIN, 921600);
     ci1302_set_audio_recv_callback(aiha_audio_recv_callback);
     ESP_LOGI(TAG, "ci1302 startup wait start");
@@ -154,7 +172,6 @@ void app_main(void) {
     audio_player_set_stop_callback(audio_stop_callback);
     audio_player_mp3_hardware_player_enable();
 
-    storage_nvs_init();
     littlefs_init();
     audio_hardware_init();
     audio_player_init();
@@ -179,7 +196,7 @@ void app_main(void) {
 
     chat_notify_audio_play(NOTIFY_STARTUP, NULL);
     qmsd_network_start(aiha_ai_chat_start);
-
+    
     // battery_manage_init();
 
     int volume_diff_count = 0;
@@ -219,11 +236,17 @@ void app_main(void) {
         } else if (input == 'j') {
             ci1302_into_wakeup_mode(1);
         } else if (input == 'k') {
-            //
+
         } else if (input == 'v') {
             ci1302_sleep_timeout_cfg(5);
         } else if (input == 'b') {
-            //
+ 
+        }
+
+        if (ci1302_partition_asr_different()) {
+            ESP_LOGW(TAG, "ASR module found update, restart to ota ci1302");
+            ci1302_asr_need_ota = 0xa55a;
+            esp_restart();
         }
 
         if (vol_status != audio_hardware_get_volume()) {

@@ -1,34 +1,45 @@
-# Google C/C++ Code Style settings
-# https://clang.llvm.org/docs/ClangFormatStyleOptions.html
-# Author: Kehan Xue, kehan.xue (at) gmail.com
+# Google C/C++ 代码风格（适配 Clang-Format 18）
+# 参考：https://clang.llvm.org/docs/ClangFormatStyleOptions.html
+# 原作者：Kehan Xue；本版：对齐到 v18，并补充中文注释
 
-Language: Cpp
-BasedOnStyle: Google
-AccessModifierOffset: -1
-AlignAfterOpenBracket: Align
-AlignConsecutiveAssignments: None
-AlignOperands: Align
-AllowAllArgumentsOnNextLine: true
-AllowAllConstructorInitializersOnNextLine: true
-AllowAllParametersOfDeclarationOnNextLine: false
-AllowShortBlocksOnASingleLine: Empty
-AllowShortCaseLabelsOnASingleLine: false
-AllowShortFunctionsOnASingleLine: Inline
-AllowShortIfStatementsOnASingleLine: Never  # To avoid conflict, set this "Never" and each "if statement" should include brace when coding
-AllowShortLambdasOnASingleLine: Inline
-AllowShortLoopsOnASingleLine: false
-AlwaysBreakAfterReturnType: None
-AlwaysBreakTemplateDeclarations: Yes
-BinPackArguments: false
-BinPackParameters: false
-BreakBeforeBraces: Custom
+# ========== 基本风格与语言 ==========
+Language: Cpp                 # 作用语言：C++（对 .cc/.cpp/.h 等文件生效）
+BasedOnStyle: Google          # 以 Google 风格为基准，再叠加下方定制
+
+# ========== 对齐与缩进 ==========
+AccessModifierOffset: -1      # 访问说明符（public/private/protected）相对 class 的缩进偏移
+AlignAfterOpenBracket: Align  # 括号/模板参数换行后，与第一个参数/实参对齐（Align/AlwaysBreak/BlockIndent）
+AlignConsecutiveAssignments: None  # 连续“=”对齐策略（None/Consecutive/AcrossEmptyLines/AcrossComments/AcrossEmptyLinesAndComments）
+AlignOperands: Align          # 二/三元表达式操作数水平对齐（Align/DontAlign/AlignAfterOperator）
+IndentWidth: 4                # 缩进宽度
+ContinuationIndentWidth: 4    # 续行（换行后）的额外缩进
+IndentCaseLabels: true        # switch 的 case: 再缩进一层
+IndentPPDirectives: None      # 预处理指令缩进（None/AfterHash/InsideBlock）
+
+# ========== 单行/多行策略（越“严格”越不允许单行） ==========
+AllowAllArgumentsOnNextLine: true               # 允许所有参数整体换到下一行（非一行一个）
+AllowAllConstructorInitializersOnNextLine: true # 允许构造函数 init-list 整体挪到下一行
+AllowAllParametersOfDeclarationOnNextLine: false # 声明形参不强制整体换到下一行
+AllowShortBlocksOnASingleLine: Empty            # 仅允许“空块 {}”单行；其他块必须换行
+AllowShortCaseLabelsOnASingleLine: false        # case 标签后不与语句同一行
+AllowShortFunctionsOnASingleLine: Inline        # 仅允许“类内的短内联函数”单行
+AllowShortIfStatementsOnASingleLine: Never      # if 语句绝不单行（常与 InsertBraces: true 搭配）
+AllowShortLambdasOnASingleLine: Inline          # 仅允许短 lambda 单行（通常为单语句体）
+AllowShortLoopsOnASingleLine: false             # for/while/do… 不允许单行
+
+# ========== 换行与模板 ==========
+AlwaysBreakAfterReturnType: None       # 返回类型后是否强制换行（None/All/TopLevel/...）
+AlwaysBreakTemplateDeclarations: Yes   # template<...> 声明后总是换行（Google 风格常用）
+
+# ========== 大括号换行风格（自定义） ==========
+BreakBeforeBraces: Custom     # 自定义每一类语法的大括号是否换行
 BraceWrapping:
-  AfterCaseLabel: false
-  AfterClass: false
+  AfterCaseLabel: false       # case 标签后是否换行开 {（false=保持 Attach 风格）
+  AfterClass: false           # class A { ... }：是否在类名后换行开 {
   AfterStruct: false
-  AfterControlStatement: Never
+  AfterControlStatement: Never # if/for/while 等控制语句后“从不”换行开 {（等价 Attach）
   AfterEnum: false
-  AfterFunction: false
+  AfterFunction: false        # 函数定义是否在下一行开 {
   AfterNamespace: false
   AfterUnion: false
   AfterExternBlock: false
@@ -39,46 +50,73 @@ BraceWrapping:
   SplitEmptyFunction: false
   SplitEmptyRecord: false
   SplitEmptyNamespace: false
-BreakBeforeBinaryOperators: None
-BreakBeforeTernaryOperators: true
-BreakConstructorInitializers: BeforeColon
-BreakInheritanceList: BeforeColon
-ColumnLimit: 180
-CompactNamespaces: false
-ContinuationIndentWidth: 4
-Cpp11BracedListStyle: false
-DerivePointerAlignment: false  # Make sure the * or & align on the left
-EmptyLineBeforeAccessModifier: LogicalBlock
-FixNamespaceComments: true
-IncludeBlocks: Preserve
-IndentCaseLabels: true
-IndentPPDirectives: None
-IndentWidth: 4
-KeepEmptyLinesAtTheStartOfBlocks: true
-MaxEmptyLinesToKeep: 1
-NamespaceIndentation: None
-ObjCSpaceAfterProperty: false
-ObjCSpaceBeforeProtocolList: true
-PointerAlignment: Left
-ReflowComments: false
-SpaceAfterCStyleCast: false
-SpaceAfterLogicalNot: false
-SpaceAfterTemplateKeyword: true
-SpaceBeforeAssignmentOperators: true
-SpaceBeforeCpp11BracedList: false
-SpaceBeforeCtorInitializerColon: true
-SpaceBeforeInheritanceColon: true
-SpaceBeforeParens: ControlStatements
-SpaceBeforeRangeBasedForLoopColon: true
-SpaceBeforeSquareBrackets: false
-SpaceInEmptyParentheses: false
-SpacesBeforeTrailingComments: 2
-SpacesInAngles: false
-SpacesInCStyleCastParentheses: false
-SpacesInContainerLiterals: false
-SpacesInParentheses: false
-SpacesInSquareBrackets: false
-Standard: c++11
-TabWidth: 4
-UseTab: Never
-SeparateDefinitionBlocks: Always   # Only support since clang-format 14
+
+# ========== 表达式与初始化列表 ==========
+BreakBeforeBinaryOperators: None          # 二元运算符换行位置（None=运算符后；NonAssignment；All）
+BreakBeforeTernaryOperators: true         # 三元运算在 ? : 前换行
+BreakConstructorInitializers: BeforeColon # 构造函数 init-list 在冒号“:”前换行
+BreakInheritanceList: BeforeColon         # 继承列表在冒号“:”前换行
+Cpp11BracedListStyle: false               # 花括号初始化不当作“参数列表”排版（更接近块风格）
+
+# ========== 行宽与命名空间 ==========
+ColumnLimit: 160              # 最大列宽（0=无限制；160 比较克制，便于审阅）
+CompactNamespaces: false      # 不把 namespace a { namespace b { ... } } 合并为 namespace a::b { ... }
+
+# ========== 初始化列表缩进 ==========
+BracedInitializerIndentWidth: 4  # 花括号初始化内部缩进（独立于 ContinuationIndentWidth）
+
+# ========== 括号空格（v17+ 细粒度写法） ==========
+SpacesInParens: Custom        # 使用自定义括号空格选项代替老键（v17+）
+SpacesInParensOptions:
+  InConditionalStatements: false # if/for/while 的条件括号里不加空格
+  InCStyleCasts: false           # C 风格强转 (int)x 不加空格
+  InEmptyParentheses: false      # f() 的 () 内不加空格
+  Other: false                   # 其它场景一律不加空格
+  # 注：如需最完整，可再加 ExceptDoubleParentheses: false（((x)) 也不例外）
+
+# ========== 头文件排序与分组 ==========
+SortIncludes: true            # 允许排序 include
+IncludeBlocks: Preserve       # 保留原有分组边界（不自动插入组间空行）。如需自动分组请改为 Regroup
+
+# 自定义 include 分组优先级（数字越小优先级越高；同优先级内按字典序）
+IncludeCategories:
+  # 1) 其他系统头（角括号），例如 <stdio.h>、<vector> 等
+  - Regex: '^<[^"]+>$'
+    Priority: 1
+
+  # 2) FreeRTOS 相关（确保在 ESP 之前）
+  - Regex: '^<freertos/.*>$'
+    Priority: 2
+  - Regex: '^"freertos/.*"$'
+    Priority: 2
+  # 若工程里也会写成不带前缀的 "FreeRTOS.h"/"task.h" 等，可另外补充匹配规则（此处暂不新增）
+
+  # 3) ESP-IDF 相关（例如 "esp_log.h", "esp_system.h"...）
+  - Regex: '^<esp[^>]*>$'
+    Priority: 3
+  - Regex: '^"esp[^"]*"$'
+    Priority: 3
+
+  # 4) 驱动相关（本地驱动目录）
+  - Regex: '^"driver/.*"$'
+    Priority: 4
+
+  # 5) NVS 相关（确保在 ESP 之后）
+  - Regex: '^"nvs[^"]*"$'
+    Priority: 5
+
+  # 6) 板级头文件（本地 board 目录）
+  - Regex: '^"board[^"]*"$'
+    Priority: 6
+
+  # 7) 其余本地头（双引号）
+  - Regex: '^".*"$'
+    Priority: 7
+
+# ========== 行尾与文件末尾 ==========
+LineEnding: LF                # 统一为 LF（\n）；跨平台更稳定
+InsertNewlineAtEOF: true      # 文件末尾若无换行，自动补一个
+
+# ========== 其它 ==========
+MaxEmptyLinesToKeep: 2        # 连续空行最多保留 2 行
+AlignArrayOfStructures: Left  # 结构体数组初始化的“按列对齐”（如你版本不支持该键，请删除）

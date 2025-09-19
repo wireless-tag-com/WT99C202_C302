@@ -22,3 +22,5 @@ bool qmsd_network_get_connected();
  * @note 初始化Wi-Fi连接，支持AP和STA模式，连接成功后会调用指定的回调函数
  */
 void qmsd_network_start(qmsd_network_connect_success_cb_t cb);
+
+void qmsd_network_start_for_1302_ota(qmsd_network_connect_success_cb_t cb);

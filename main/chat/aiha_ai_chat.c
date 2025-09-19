@@ -1,28 +1,42 @@
 #include "aiha_ai_chat.h"
+#include "aiha_audio_http.h"
 #include "aiha_http_common.h"
 #include "aiha_websocket.h"
 #include "audio_player_user.h"
 #include "chat_asr_ctrl.h"
 #include "chat_notify.h"
 #include "ci1302.h"
+#include "qmsd_ota.h"
 #include "qmsd_utils.h"
 #include "qmsd_wifi_sta.h"
-#include "aiha_audio_http.h"
-#include "esp_log.h"
-#include "qmsd_ota.h"
 
 #define TAG "aiha.ai_chat"
 
 static bool use_exit_chat_mode = false;
 
-void aiha_websocket_audio_recv_cb(const uint8_t* data, uint32_t size, allinone_audio_status_t status) {
+// 这个函数不能阻塞，否则会导致音频数据丢失
+void aiha_local_asr_detected_cb(uint16_t detect_id) {
+    ESP_LOGW(TAG, "Local ASR detected, detect_id: %d", detect_id);
+    aiha_websocket_req_stop_all_async();
+    aiha_request_tts_async("收到本地命令词");
+}
+
+void aiha_websocket_audio_recv_cb(const uint8_t* data, uint32_t size, allinone_audio_status_t status, aiha_audio_format_t format) {
     if (status == ALLINONE_AUDIO_STATUS_START) {
-        audio_player_play_url(MP3_URL_FROM_RAW, 0);
+        if (format == AIHA_AUDIO_FORMAT_MP3) {
+            audio_player_play_url(MP3_URL_FROM_RAW, 1);
+        } else if (format == AIHA_AUDIO_FORMAT_OPUS) {
+            audio_player_play_url(OPUS_URL_FROM_RAW, 1);
+        }
         audio_player_wait_stream_pipeline_running();
     } else if (status == ALLINONE_AUDIO_STATUS_END) {
         audio_player_raw_write_finish();
     } else if (status == ALLINONE_AUDIO_STATUS_PROCESSING) {
-        audio_player_raw_mp3_write((char*)data, size);
+        if (format == AIHA_AUDIO_FORMAT_MP3) {
+            audio_player_raw_mp3_write((char*)data, size);
+        } else if (format == AIHA_AUDIO_FORMAT_OPUS) {
+            audio_player_opus_write((char*)data, size);
+        }
     }
 }
 
@@ -83,7 +97,6 @@ void aiha_audio_recv_callback(ci1302_audio_status_t status, uint8_t* data, uint3
         }
         return;
     }
-    ESP_LOGD(TAG, "audio recv callback, status: %d", status);
 
     // 唤醒打断处理 - 无论是否在播放音乐都要处理
     if (status == CI1302_AUDIO_WAKEUP) {
@@ -144,16 +157,19 @@ void aiha_audio_recv_callback(ci1302_audio_status_t status, uint8_t* data, uint3
 void aiha_ai_chat_start() {
     chat_asr_ctrl_init();
     srand(esp_timer_get_time());
+    ci1302_set_local_asr_detected_cb(aiha_local_asr_detected_cb);
 
     aiha_websocket_handle_t websocket_handle = {
-        .audio_upload_format = "opus",
-        .audio_spk_format = "mp3",
+        .audio_upload_format = AIHA_AUDIO_FORMAT_OPUS,
+        .audio_spk_format = AIHA_AUDIO_FORMAT_MP3,
+        .vad_type = 2,
         .audio_recv_cb = aiha_websocket_audio_recv_cb,
         .text_recv_cb = NULL,
         .asr_finish_cb = aiha_audio_asr_finish,
         .error_cb = aiha_chat_deal_error,
     };
     strcpy(websocket_handle.production_id, aiha_get_production_id());
+
     aiha_websocket_init(&websocket_handle);
     aiha_websocket_connect();
 }

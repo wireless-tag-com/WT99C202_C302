@@ -93,10 +93,13 @@ extern "C" {
 #define RGB888TO565(r, g, b)    ((((r) & 0b11111000) << 8) | (((g) & 0b11111100) << 3) | ((b) >> 3))
 #endif
 
+#define TO_STR2(x) #x
+#define TO_STR(x) TO_STR2(x)
+
 #define EMBED_FILES_DECLARE(file_name) \
 extern uint8_t _binary_##file_name##_start; \
 extern uint8_t _binary_##file_name##_end; \
-const uint8_t* _##file_name##_ptr = &_binary_##file_name##_start; \
+extern const uint8_t _##file_name##_ptr[] asm(TO_STR(_binary_##file_name##_start)); \
 uint32_t _##file_name##_size = (uint32_t)&_binary_##file_name##_end - (uint32_t)&_binary_##file_name##_start
 
 // time -> base <sys/time.h>

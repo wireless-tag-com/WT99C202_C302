@@ -51,7 +51,10 @@ static void wifi_cfg_via_blufi_task(void* arg) {
     }
     qmsd_prov_blufi_deinit();
 
-    storage_nvs_write_blob("wifiCfg", &wifi_config, sizeof(wifi_config_t));
+    if (storage_nvs_write_blob("wifiCfg", &wifi_config, sizeof(wifi_config_t)) != ESP_OK) {
+        ESP_LOGE(TAG, "WiFi配置写入失败");
+    }
+
     chat_notify_audio_play(NOTIFY_WIFI_CONNECT, NULL);
     vTaskDelay(pdMS_TO_TICKS(6000));
     esp_restart();
@@ -111,4 +114,58 @@ void qmsd_network_task(void* arg) {
 
 void qmsd_network_start(qmsd_network_connect_success_cb_t cb) {
     qmsd_thread_create(qmsd_network_task, "qmsd_network_task", 4 * 1024, cb, 5, NULL, 0, 1);
+}
+
+
+// 为1302的ota网络初始化
+void qmsd_network_1302_ota_task(void* arg) {
+    ESP_LOGI(TAG, "Starting 1302 OTA network task");
+    uint8_t g_wifi_need_cfg = 0;
+    qmsd_network_connect_success_cb_t success_cb = (qmsd_network_connect_success_cb_t)arg;
+    
+    // 初始化wifi
+    qmsd_wifi_init();
+    qmsd_wifi_sta_init();
+    
+    g_wifi_need_cfg = qmsd_network_get_need_bind();
+    if (g_wifi_need_cfg) {
+        wifi_cfg_via_blufi_task(NULL);
+    }
+    
+    // 设置无限重连
+    qmsd_wifi_sta_set_reconnect_times(-1, -1, -1);
+    uint32_t connect_start_ticks = xTaskGetTickCount();
+    qmsd_wifi_sta_connect(wifi_cfg, WIFI_BW_HT20, 0);
+
+    // 等待初次连接成功
+    while (qmsd_wifi_sta_get_status() != STA_CONNECTED) {
+        if (connect_start_ticks && xTaskGetTickCount() - connect_start_ticks > pdMS_TO_TICKS(10000)) {
+            ESP_LOGW(TAG, "WiFi connection timeout, retrying...");
+            connect_start_ticks = xTaskGetTickCount();
+        }
+        vTaskDelay(pdMS_TO_TICKS(100));
+    }
+    
+    ESP_LOGI(TAG, "WiFi connected successfully for OTA");
+    if (success_cb) {
+        success_cb();
+    }
+    
+    // 保持任务运行，监控WiFi连接状态
+    ESP_LOGI(TAG, "Monitoring WiFi connection during OTA...");
+    while (1) {
+        if (qmsd_wifi_sta_get_status() != STA_CONNECTED) {
+            ESP_LOGW(TAG, "WiFi disconnected during OTA, waiting for reconnection...");
+            // 等待重连
+            while (qmsd_wifi_sta_get_status() != STA_CONNECTED) {
+                vTaskDelay(pdMS_TO_TICKS(1000));
+            }
+            ESP_LOGI(TAG, "WiFi reconnected");
+        }
+        vTaskDelay(pdMS_TO_TICKS(5000));  // 每5秒检查一次WiFi状态
+    }
+}
+
+void qmsd_network_start_for_1302_ota(qmsd_network_connect_success_cb_t cb) {
+    qmsd_thread_create(qmsd_network_1302_ota_task, "qmsd_network_1302_ota_task", 4 * 1024, cb, 5, NULL, 0, 1);
 }

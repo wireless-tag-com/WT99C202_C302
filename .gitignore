@@ -22,13 +22,13 @@
 *.lo
 
 # Shared objects (inc. Windows DLLs)
-*.dll
+# *.dll
 *.so
 *.so.*
 *.dylib
 
 # Executables
-*.exe
+# *.exe
 *.out
 *.app
 *.i*86
@@ -66,3 +66,7 @@ firmware_0x0.bin
 components/ci1302_protocol/tools/files
 
 C202_AI_SDK_source/
+
+WT99C202_C302_LIB/
+
+.gitlab-ci.yml

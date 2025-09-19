@@ -8,22 +8,22 @@ extern "C" {
 #endif
 
 // 常量定义
-#define CI1302_VAD_FRAME_MS          40      // VAD帧时长，单位ms
-#define CI1302_VAD_MAX_TIMEOUT_S    15      // VAD最大超时时间，单位s
-#define CI1302_VAD_SENSITIVITY_MAX   60     // VAD灵敏度最大值
-#define CI1302_VAD_SENSITIVITY_MIN   45     // VAD灵敏度最小值
+#define CI1302_VAD_FRAME_MS 40         // VAD帧时长，单位ms
+#define CI1302_VAD_MAX_TIMEOUT_S 15    // VAD最大超时时间，单位s
+#define CI1302_VAD_SENSITIVITY_MAX 60  // VAD灵敏度最大值
+#define CI1302_VAD_SENSITIVITY_MIN 45  // VAD灵敏度最小值
 #define CI1302_VAD_SENSITIVITY_DEFAULT 53
-#define CI1302_MIC_GAIN_MAX          32      // 麦克风增益最大值
+#define CI1302_MIC_GAIN_MAX 32  // 麦克风增益最大值
+
 typedef enum {
-    CI1302_FORMAT_PCM = 0,   // only spk support
-    CI1302_FORMAT_SPEEX = 1, // not support now
+    CI1302_FORMAT_PCM = 0,    // only spk support
+    CI1302_FORMAT_SPEEX = 1,  // not support now
     CI1302_FORMAT_OPUS = 2,
-    CI1302_FORMAT_MP3 = 3, // not support now
+    CI1302_FORMAT_MP3 = 3,  // not support now
 } __attribute__((packed)) ci1302_audio_format_t;
 
 // 确保枚举大小为1字节的编译时检查
 _Static_assert(sizeof(ci1302_audio_format_t) == 1, "ci1302_audio_format_t must be 1 byte");
-
 
 typedef enum {
     CI1302_AUDIO_START = 0x00,
@@ -35,8 +35,19 @@ typedef enum {
     CI1302_AUDIO_IDLE = 0xFF,
 } ci1302_audio_status_t;
 
+typedef enum {
+    UPDATA_USER_CODE1,
+    UPDATA_USER_CODE2,
+    UPDATA_ASR,
+    UPDATA_DNN,
+    UPDATA_VOICE,
+    UPDATA_USER_FILE,
+    UPDATA_OVER_FLOW,
+} ci1302_partition_index_t;
 
 typedef void (*ci1302_audio_recv_cb_t)(ci1302_audio_status_t status, uint8_t* data, uint32_t len);
+
+typedef void (*ci1302_local_asr_detected_cb_t)(uint16_t detect_id);
 
 /**
  * @brief 初始化CI1302音频芯片
@@ -126,7 +137,6 @@ void ci1302_into_sleep_mode(uint8_t is_notify);
  */
 void ci1302_sleep_timeout_cfg(uint16_t sleep_timeout_sec);
 
-
 /**
  * @brief 配置VAD灵敏度
  * @param sensitivity 灵敏度值（45~60，数值越大灵敏度越低）
@@ -146,7 +156,6 @@ bool ci1302_wait_startup(uint32_t timeout_ms);
  */
 uint32_t ci1302_get_wakeup_keep_ms();
 
-
 /**
  * @brief 退出聊天模式
  * @param is_exit true:需要退出聊天，休眠时间改为1s，false:确定休眠后，休眠时间改为30s
@@ -163,8 +172,18 @@ bool ci1302_audio_in_playing();
 
 void ci1302_audio_in_playing_reset();
 
+/**
+ * @brief 进入OTA模式
+ */
+void ci1302_enter_ota_mode();
 
+bool ci1302_partition_asr_different();
 
+/**
+ * @brief 获取ci1302识别到的命令词，如果未收到过命令词或者在下一次收到命令词前重复获取，则返回0xffff
+ * @return ci1302识别到的命令词
+ */
+void ci1302_set_local_asr_detected_cb(ci1302_local_asr_detected_cb_t cb);
 #ifdef __cplusplus
 }
 #endif

@@ -16,6 +16,7 @@
 
 #include "qmsd_board_pin.h"
 #include "qmsd_utils.h"
+#include "bat.h"
 
 #define TAG "BATTERY"
 
@@ -333,26 +334,26 @@ static void bat_update_task(void* param) {
         }
 
         // 低电量警告事件 - 只在首次进入低电量时触发，避免重复通知
-        if (g_bat_percent <= 20 && !low_power_notified && g_bat_event_callback) {
+        if (g_bat_percent <= LOW_POWER && !low_power_notified && g_bat_event_callback) {
             g_bat_event_callback(BAT_EVENT_LOW_POWER, g_bat_percent);
             low_power_notified = 1;
             ESP_LOGI(TAG, "低电量警告事件已触发 (%d%%)", g_bat_percent);
         }
 
         // 电量恢复到20%以上时，重置低电量通知标志
-        if (g_bat_percent > 20) {
+        if (g_bat_percent > LOW_POWER) {
             low_power_notified = 0;
         }
 
         // 极低电量事件 - 只在首次进入极低电量时触发，避免重复通知
-        if (g_bat_percent <= 5 && !critical_power_notified && g_bat_event_callback) {
+        if (g_bat_percent <= EXTREMELY_LOW_POWER && !critical_power_notified && g_bat_event_callback) {
             g_bat_event_callback(BAT_EVENT_CRITICAL, g_bat_percent);
             critical_power_notified = 1;
             ESP_LOGI(TAG, "极低电量警告事件已触发 (%d%%)", g_bat_percent);
         }
 
         // 电量恢复到5%以上时，重置极低电量通知标志
-        if (g_bat_percent > 5) {
+        if (g_bat_percent > EXTREMELY_LOW_POWER) {
             critical_power_notified = 0;
         }
 
@@ -484,9 +485,9 @@ void bat_get_status_string(char* buf, size_t buf_size) {
     if (g_usb_valid) {
         status = g_bat_charge_full ? "充电完成" : "充电中";
     } else {
-        if (g_bat_percent > 20) {
+        if (g_bat_percent > LOW_POWER) {
             status = "正常";
-        } else if (g_bat_percent > 5) {
+        } else if (g_bat_percent > EXTREMELY_LOW_POWER) {
             status = "电量低";
         } else {
             status = "电量极低";

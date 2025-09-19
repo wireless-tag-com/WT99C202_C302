@@ -4,6 +4,27 @@
 #include "aiha_websocket.h"
 
 /**
+ * @brief 本地ASR检测回调函数
+ * @param detect_id 检测ID
+ */
+void aiha_local_asr_detected_cb(uint16_t detect_id);
+
+/**
+ * @brief WebSocket音频接收回调函数
+ * @param data 音频数据
+ * @param size 音频数据大小
+ * @param status 音频状态
+ * @param format 音频格式
+ */
+void aiha_websocket_audio_recv_cb(const uint8_t* data, uint32_t size, allinone_audio_status_t status, aiha_audio_format_t format);
+
+/**
+ * @param quest 识别结果
+ * @param answer_replace 回答替换，暂未实现
+ * @return 是否继续处理
+ */
+bool aiha_audio_asr_finish(const char* quest, const char* answer_replace);
+/**
  * @brief 处理AI聊天过程中的错误
  * @param error_code 错误代码，定义在allinone_error_code_t枚举中
  * @note 根据不同的错误代码执行相应的错误处理逻辑，如播放错误提示音、重置连接等

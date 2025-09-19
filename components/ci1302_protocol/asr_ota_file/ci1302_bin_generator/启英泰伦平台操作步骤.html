@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>启英泰伦官方平台操作步骤详解</title>
+    <style>
+        body {
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #34495e;
+            margin-top: 30px;
+        }
+        h3 {
+            color: #7f8c8d;
+            margin-top: 25px;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin: 10px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .note {
+            background-color: #f8f9fa;
+            border-left: 4px solid #17a2b8;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 4px 4px 0;
+        }
+        .file-list {
+            background-color: #f1f3f4;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        ol {
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        hr {
+            border: none;
+            border-top: 2px solid #ecf0f1;
+            margin: 30px 0;
+        }
+        .footer {
+            text-align: center;
+            color: #7f8c8d;
+            font-style: italic;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <h1>启英泰伦官方平台操作步骤详解</h1>
+    
+    <p>本文档详细说明了在启英泰伦官方平台上生成素材包的完整操作流程。</p>
+
+    <h2>操作步骤</h2>
+
+    <h3>步骤1：登录平台</h3>
+    <img src="pictures/1.png" alt="步骤1">
+    <p>访问启英泰伦官方平台，使用您的账号登录系统。</p>
+
+    <h3>步骤2：选择功能</h3>
+    <img src="pictures/2.png" alt="步骤2">
+    <p>登录后，选择相应的功能模块进入配置界面。</p>
+
+    <h3>步骤3：新建配置参数</h3>
+    <img src="pictures/3.png" alt="步骤3">
+    <p>开始新建配置，设置基本参数。</p>
+
+    <h3>步骤4-10：详细配置流程1</h3>
+    <img src="pictures/4~10.png" alt="步骤4-10">
+    <p>进行详细的配置设置，包括语音模型、识别参数等关键配置。</p>
+
+    <h3>步骤11-12：详细配置流程2</h3>
+    <img src="pictures/11~12.png" alt="步骤11-12">
+    <p>继续完善配置参数，确保所有设置符合要求。</p>
+
+    <h3>步骤13-14：下载并导入唤醒词、命令词表格</h3>
+    <img src="pictures/13~14.png" alt="步骤13-14">
+    <p>下载模板表格，填写您的唤醒词和命令词，然后导入到平台中。</p>
+
+    <h3>步骤15-17：最后修改并提交</h3>
+    <img src="pictures/15~17.png" alt="步骤15-17">
+    <p>对配置进行最终检查和修改，确认无误后提交生成请求。</p>
+
+    <h3>步骤18：下载素材包</h3>
+    <img src="pictures/18.png" alt="步骤18">
+    <p>生成完成后，下载包含以下文件的素材包：</p>
+    <div class="file-list">
+        • GfstCmd\[0]asr_chinese_CI1302_V00927.dat<br>
+        • GfstWake\[1]asr_chinese_CI1302_V00927.dat<br>
+        • CmdWordStructure\[60000]{cmd_info}.xlsx
+    </div>
+
+    <h2>注意事项</h2>
+    <div class="note">
+        <ol>
+            <li><strong>模型限制</strong>：请按图中指定的语音模型和版本进行配置</li>
+            <li><strong>文件格式</strong>：确保生成的文件格式正确</li>
+            <li><strong>命名规范</strong>：保持文件名的标准格式</li>
+            <li><strong>版本兼容</strong>：使用与CI1302芯片兼容的版本</li>
+        </ol>
+    </div>
+
+    <h2>后续操作</h2>
+    <p>完成素材包下载后，请按照主README文档中的"具体步骤"进行本地bin文件生成：</p>
+    <ol>
+        <li>将素材包文件放入对应目录</li>
+        <li>运行<code>generate_bins.bat</code>脚本</li>
+        <li>生成最终的bin文件</li>
+    </ol>
+
+    <hr>
+    <div class="footer">
+        <p><em>本文档版本：v1.0</em><br>
+        <em>更新日期：2025年9月</em></p>
+    </div>
+</body>
+</html>
