@@ -58,20 +58,6 @@ uint8_t bat_in_charge(void);
 void bat_set_event_callback(void (*callback)(uint8_t event_type, uint32_t data));
 
 /**
- * @brief 获取电池健康度百分比
- *
- * @return uint32_t 电池健康度 (0-100)
- */
-uint32_t bat_get_health_percent(void);
-
-/**
- * @brief 获取电池充放电循环次数
- *
- * @return uint32_t 循环次数
- */
-uint32_t bat_get_cycle_count(void);
-
-/**
  * @brief 检查电池是否充满
  *
  * @return uint8_t 1表示充满，0表示未充满

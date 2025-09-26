@@ -86,7 +86,7 @@ void btn_single_callback_cb(btn_handle_t handle, void* user_data) {
 
 void btn_repeat_callback_cb(btn_handle_t handle, void* user_data) {
     uint8_t repeat_count = qmsd_button_get_repeat(handle);
-    // 长按5次重启
+    // 连按5次重启
     if (repeat_count > 5) {
         storage_nvs_erase_key("wifiCfg");
         esp_restart();
@@ -99,11 +99,10 @@ void aiha_tts_cb(const char* url, void* user_data) {
     audio_player_play_url(url, 1);
 }
 
-// 音乐播放状态回调：控制全双工开关
+// 音乐播放状态回调：控制全双工开关；
+// 音乐模式：关闭全双工（仅保留唤醒词），非音乐模式：开启全双工（正常对话）
 void duplex_mode_callback(bool is_enable) {
     ESP_LOGI(TAG, "Duplex mode: %s", is_enable ? "ON" : "OFF");
-    // 音乐模式：关闭全双工（仅保留唤醒词）
-    // 非音乐模式：开启全双工（正常对话）
     ci1302_set_upload_while_playing(is_enable ? 0x01 : 0x00);
 }
 
@@ -141,9 +140,6 @@ void app_main(void) {
     storage_nvs_init();
     
     // 1302 ota网络初始化
-    // qmsd_network_start_for_1302_ota(NULL);
-    // ci1302_ota_v3_update_start("http://192.169.3.74:8081/ci1302/ci1306_v1.0.11_lingxilingxi.bin"); // ota升级,v3协议
-    // ci1302_ota_v3_update_start("http://192.169.3.74:8081/ci1302/ci1306_v1.0.11_nihaoxiaoming.bin");
     if (ci1302_asr_need_ota == 0xa55a) {
         ci1302_asr_need_ota = 0;
         ESP_LOGW(TAG, "ASR module found update, start ota ci1302");

@@ -1,12 +1,6 @@
 /**
  * @file bat_status.c
  * @brief 电池管理系统状态监控和事件处理
- *
- * 展示如何在现有项目中无缝集成电池管理功能
- *
- * ⚠️  重要提醒：格式化 uint32_t 类型时必须使用 PRIu32 宏！
- *     正确：ESP_LOGI(TAG, "电压: %" PRIu32 "mV", voltage);
- *     错误：ESP_LOGI(TAG, "电压: %dmV", voltage);  // 编译错误！
  */
 
 #include <inttypes.h>

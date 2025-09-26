@@ -15,7 +15,7 @@
 ### 步骤2：放置ASR文件
 将素材包中`GfstCmd\[0]asr_chinese_CI1302_V00927.dat`和`GfstWake\[1]asr_chinese_CI1302_V00927.dat`放入`ci1302_bin_generator\asr`目录下，替换原有的两个同名文件。
 
-> 📝 **特殊情况**：如果新生成了只有唤醒词没有命令词的素材包，就把`asr\[1]asr_chinese_CI1302_V00927.dat`删掉
+> 📝 **特殊情况**：如果新生成了只有唤醒词没有命令词的素材包，可能会导致OTA失败，需要至少添加一个命令词
 
 ### 步骤3：放置用户文件
 同理将素材包`CmdWordStructure\[60000]{cmd_info}.xlsx`替换`ci1302_bin_generator\user_file\cmd_info`下的同名文件。

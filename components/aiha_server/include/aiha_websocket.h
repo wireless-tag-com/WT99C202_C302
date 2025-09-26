@@ -139,6 +139,12 @@ void aiha_websocket_audio_upload_start();
 void aiha_websocket_audio_upload_end();
 
 /**
+ * @brief 强制结束音频上传
+ * @details 强制清空音频缓冲区并结束音频上传，用于处理异常情况
+ */
+void aiha_websocket_audio_upload_force_end();
+
+/**
  * @brief 上传音频数据
  * @param data 音频数据指针
  * @param size 音频数据大小

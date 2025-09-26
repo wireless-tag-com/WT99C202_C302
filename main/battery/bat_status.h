@@ -29,10 +29,3 @@ bool should_enter_power_saving_mode(void);
  * 包含电量百分比、充电状态和电压信息
  */
 void battery_speak_status(void);
-
-/**
- * @brief 电池关机函数
- * 通过设置PW_KEEP_PIN为低电平来关闭设备电源
- */
-void battery_shutdown(void);
-
