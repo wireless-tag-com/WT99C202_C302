@@ -224,7 +224,7 @@ def print_partition_table(d):
 
 def main():
     script_dir =  os.path.dirname(os.path.abspath(__file__))
-    files_dir = os.path.join(script_dir, "..", "asr_ota_file")
+    files_dir = os.path.join(script_dir, "../..", "asr_ota_file")
 
     firmware_path = os.path.join(files_dir, "ci1302_firmware.bin")
     asr_bin_path = os.path.join(files_dir, "asr.bin")

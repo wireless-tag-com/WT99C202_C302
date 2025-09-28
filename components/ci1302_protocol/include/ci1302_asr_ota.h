@@ -9,7 +9,7 @@
 extern "C" {
 #endif
 
-void ci1302_asr_ota_init(void);
+void ci1302_asr_ota_init(const uint8_t* firmware_data, uint32_t firmware_size);
 
 esp_err_t ci1302_asr_ota_get_firmware_data_cb(uint16_t packet_id, uint8_t* data, uint16_t data_len);
 

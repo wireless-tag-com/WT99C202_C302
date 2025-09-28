@@ -60,6 +60,8 @@ typedef void (*ci1302_local_asr_detected_cb_t)(uint16_t detect_id);
  */
 void ci1302_init(uint8_t uart_num, uint8_t tx_pin, uint8_t rx_pin, int8_t flow_ctrl_pin, uint8_t rst_pin, uint32_t baudrate);
 
+void ci1302_set_firmware_data(const uint8_t* firmware_data, uint32_t firmware_size);
+
 /**
  * @brief 复位CI1302
  */

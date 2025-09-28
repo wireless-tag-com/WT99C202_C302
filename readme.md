@@ -61,7 +61,8 @@ endif()
 ## 📁 项目结构
 
 ```
-├── main/                    # 主程序
+├── main/                   # 主程序
+│   ├── asr_ota_file/       # 1302唤醒词更新组件
 │   ├── chat/               # 语音聊天控制逻辑
 │   ├── network/            # 网络管理、OTA
 │   ├── tone_res/           # 本地提示音资源
@@ -119,7 +120,7 @@ endif()
 
 * 所有设备运行日志建议通过串口监视器进行查看，便于问题排查和调试
 * 硬件连接需确保麦克风、扬声器、按键等组件完整接入
-* 若对idf不够了解，尽量不要去修改 components_adf 内的内容，以免编译不通过
+* 若对idf不够了解，请尽量不要去修改 components_adf 内的内容，以免编译不通过
 
 ---
 
@@ -139,5 +140,5 @@ endif()
 
 * [ESP-IDF 官方文档](https://docs.espressif.com/projects/esp-idf/)
 * [ESP-ADF 官方文档](https://docs.espressif.com/projects/esp-adf/)
-* 语音芯片OTA流程请参考`components/ci1302_protocol/asr_ota_file/readme.md`
+* 语音芯片OTA流程请参考`main/asr_ota_file/readme.md`
 * 原理图、使用指南见工程下docs目录

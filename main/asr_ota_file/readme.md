@@ -73,7 +73,7 @@ pat->voice.version: 0.0.100, size: 1379, crc: 0xd3a2
 pat->user_file.version: 0.0.100, size: 7855, crc: 0xffb7
 新校验和: 0x1d8f
 
-重新打包的分区表已保存到: /home/long/esp/idfv55_release/other_project/WT99C202_C302/components/ci1302_protocol/tools/../asr_ota_file/asr_by_gen.bin
+重新打包的分区表已保存到: */WT99C202_C302/main/asr_ota_file/tools/../../asr_ota_file/asr_by_gen.bin
 ```
 ### 步骤5：烧录并验证
 将新固件烧录至ESP32C2或ESP32C3，上电后会自动检查CI1302是否需要更新：

@@ -138,13 +138,15 @@ void app_main(void) {
 
     printf("QMSD Start, version: " SOFT_VERSION "\n");
     storage_nvs_init();
-    
+
+    EMBED_FILES_DECLARE(asr_by_gen_bin);
+    ci1302_set_firmware_data((const uint8_t*)_asr_by_gen_bin_ptr, _asr_by_gen_bin_size);
     // 1302 ota网络初始化
     if (ci1302_asr_need_ota == 0xa55a) {
         ci1302_asr_need_ota = 0;
         ESP_LOGW(TAG, "ASR module found update, start ota ci1302");
         ci1302_uart_ota_init(UART_NUM_1, EXT_UART_TXD_PIN, EXT_UART_RXD_PIN, 921600);
-        ci1302_asr_ota_init();
+        ci1302_asr_ota_init((const uint8_t*)_asr_by_gen_bin_ptr, _asr_by_gen_bin_size);
         for (;;) {
             vTaskDelay(pdMS_TO_TICKS(100));
         }
