@@ -68,9 +68,10 @@ void ci1302_set_firmware_data(const uint8_t* firmware_data, uint32_t firmware_si
 void ci1302_reset();
 
 /**
- * @brief 请求获取CI1302芯片版本信息
+ * @brief 获取CI1302芯片版本信息
+ * @return 版本信息字符串
  */
-void ci1302_req_version();
+char *ci1302_get_version();
 
 /**
  * @brief 设置扬声器音量

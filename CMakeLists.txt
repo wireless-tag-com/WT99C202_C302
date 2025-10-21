@@ -2,7 +2,7 @@
 # CMakeLists in this exact order for cmake to work correctly
 cmake_minimum_required(VERSION 3.16)
 
-set(SOFT_VERSION "v1.0.2")
+set(SOFT_VERSION "v1.0.3")
 add_definitions(-DSOFT_VERSION="${SOFT_VERSION}")
 
 set(ENV{QMSD_8MS_PATH} ${CMAKE_SOURCE_DIR}/qmsd_esp32_sdk)

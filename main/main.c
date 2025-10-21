@@ -156,7 +156,7 @@ void app_main(void) {
     ci1302_set_audio_recv_callback(aiha_audio_recv_callback);
     ESP_LOGI(TAG, "ci1302 startup wait start");
     ci1302_wait_startup(portMAX_DELAY);
-    ESP_LOGI(TAG, "ci1302 startup wait done");
+    ESP_LOGI(TAG, "ci1302 startup wait done, version: %s from wireless-tag", ci1302_get_version());
 
     qmsd_button_config_t btn_config = QMSD_BUTTON_DEFAULT_CONFIG;
     btn_config.debounce_ticks = 2;
